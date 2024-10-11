@@ -1,0 +1,136 @@
+:root {
+    --bg-color-light: #f0f0f0;
+    --text-color-light: #6b4a2d;
+    --header-bg-light: #f4e1d2;
+    --card-bg-light: #f4e1d2;
+    --button-bg-light: #a3876a;
+    --button-hover-bg-light: #6b4a2d;
+
+    --bg-color-dark: #2e3b2e;
+    --text-color-dark: #e0e0e0;
+    --header-bg-dark: #4a6b4a;
+    --card-bg-dark: #394d39;
+    --button-bg-dark: #516e51;
+    --button-hover-bg-dark: #3a513a;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--bg-color-light);
+    color: var(--text-color-light);
+    margin: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 10px;
+    width: 90%;
+    max-width: 800px;
+}
+
+.day, .day-header {
+    background-color: var(--card-bg-light);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.3s, color 0.3s;
+}
+
+.day {
+    cursor: pointer;
+}
+
+.day:hover {
+    transform: scale(1.05);
+}
+
+.day-header {
+    background-color: var(--header-bg-light);
+    color: var(--text-color-light);
+    font-weight: bold;
+    cursor: default;
+}
+
+.message-card {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--card-bg-light);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 80%;
+    text-align: center;
+}
+
+.message-card p {
+    font-size: 18px;
+}
+
+.close-btn {
+    background-color: var(--button-bg-light);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.close-btn:hover {
+    background-color: var(--button-hover-bg-light);
+}
+
+.theme-toggle-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--button-bg-light);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.theme-toggle-btn:hover {
+    background-color: var(--button-hover-bg-light);
+}
+
+body.dark-mode {
+    background-color: var(--bg-color-dark);
+    color: var(--text-color-dark);
+}
+
+body.dark-mode .day-header {
+    background-color: var(--header-bg-dark);
+    color: var(--text-color-dark);
+}
+
+body.dark-mode .day, body.dark-mode .message-card {
+    background-color: var(--card-bg-dark);
+    color: var(--text-color-dark);
+}
+
+body.dark-mode .close-btn, body.dark-mode .theme-toggle-btn {
+    background-color: var(--button-bg-dark);
+}
+
+body.dark-mode .close-btn:hover, body.dark-mode .theme-toggle-btn:hover {
+    background-color: var(--button-hover-bg-dark);
+}

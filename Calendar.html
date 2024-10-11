@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário Motivacional</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Calendário Motivacional</h1>
+
+    <button class="theme-toggle-btn" onclick="toggleTheme()">Mudar Tema</button>
+
+    <div class="calendar">
+        <div class="day-header">Dom</div>
+        <div class="day-header">Seg</div>
+        <div class="day-header">Ter</div>
+        <div class="day-header">Qua</div>
+        <div class="day-header">Qui</div>
+        <div class="day-header">Sex</div>
+        <div class="day-header">Sáb</div>
+
+        <div class="day" data-message="Cada passo que você dá te aproxima de algo incrível. Continue caminhando.">1</div>
+        <div class="day" data-message="Seu esforço hoje é o que constrói o seu futuro. Não desista.">2</div>
+        <div class="day" data-message="Não importa o quão devagar você vá, o importante é não parar.">3</div>
+        <div class="day" data-message="Você tem mais força do que imagina. Acredite no seu potencial.">4</div>
+        <div class="day" data-message="Os desafios de hoje são as vitórias de amanhã. Continue em frente.">5</div>
+        <div class="day" data-message="Cada dia é uma nova oportunidade para ser melhor do que ontem.">6</div>
+        <div class="day" data-message="Seu sonho vale cada esforço. Persista, você está no caminho certo.">7</div>
+        <div class="day" data-message="A jornada pode ser longa, mas a recompensa será grandiosa.">8</div>
+        <div class="day" data-message="Acredite em si mesmo e tudo se tornará possível.">9</div>
+        <div class="day" data-message="Você é capaz de superar qualquer obstáculo. Mantenha o foco.">10</div>
+        <div class="day" data-message="O futuro pertence a quem trabalha por ele hoje.">11</div>
+        <div class="day" data-message="Cada conquista começa com a decisão de tentar.">12</div>
+        <div class="day" data-message="Grandes coisas estão à sua espera. Dê o seu melhor.">13</div>
+        <div class="day" data-message="Seu potencial é ilimitado. Acredite nisso e vá em frente.">14</div>
+        <div class="day" data-message="Nenhum sonho é grande demais quando se tem determinação.">15</div>
+        <div class="day" data-message="Você está fazendo um ótimo trabalho. Continue firme!">16</div>
+        <div class="day" data-message="Você é capaz de mais do que imagina. Confie em si mesmo.">17</div>
+        <div class="day" data-message="Cada desafio enfrentado é uma lição aprendida. Você está crescendo.">18</div>
+        <div class="day" data-message="Seu esforço será recompensado. Tenha paciência e persistência.">19</div>
+        <div class="day" data-message="Acredite que você pode, e você estará no meio do caminho.">20</div>
+        <div class="day" data-message="Você está mais perto do sucesso do que imagina. Continue avançando.">21</div>
+        <div class="day" data-message="O impossível é apenas algo que ninguém tentou ainda. Tente.">22</div>
+        <div class="day" data-message="Você tem a capacidade de transformar seus sonhos em realidade.">23</div>
+        <div class="day" data-message="Seus esforços de hoje definirão as conquistas de amanhã.">24</div>
+        <div class="day" data-message="Sua jornada é única, e você está exatamente onde precisa estar.">25</div>
+        <div class="day" data-message="Nunca subestime o poder de acreditar em si mesmo.">26</div>
+        <div class="day" data-message="Você está construindo algo incrível. Continue.">27</div>
+        <div class="day" data-message="Sua persistência é o que define seu sucesso.">28</div>
+        <div class="day" data-message="Você tem o que é preciso para alcançar seus sonhos. Acredite.">29</div>
+        <div class="day" data-message="Cada dia é uma nova chance de alcançar seus objetivos.">30</div>
+    </div>
+
+    <div class="message-card" id="messageCard">
+        <p id="messageText"></p>
+        <button class="close-btn" onclick="closeMessage()">Fechar</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
