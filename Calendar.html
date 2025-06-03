@@ -3,60 +3,569 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendário Motivacional</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Calculadora Agrícola</title>
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --verde-escuro: #2F4F4F;
+            --bege-claro: #F5F5DC;
+            --marrom-taupe: #8B7E66;
+            --branco: #FFFFFF;
+            --verde-oliva: #708238;
+            --cinza-chumbo: #333333;
+            --sombra: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bege-claro);
+            color: var(--cinza-chumbo);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+        
+        .container {
+            max-width: 820px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: var(--branco);
+            border-radius: 8px;
+            box-shadow: var(--sombra);
+            border: 1px solid var(--marrom-taupe);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--marrom-taupe);
+        }
+        
+        h1 {
+            color: var(--verde-escuro);
+            margin-bottom: 8px;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .subtitle {
+            color: var(--marrom-taupe);
+            font-size: 15px;
+            font-weight: 400;
+        }
+        
+        .control-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .panel-section {
+            background-color: var(--branco);
+            border: 1px solid var(--marrom-taupe);
+            border-radius: 6px;
+            padding: 18px;
+        }
+        
+        .panel-title {
+            color: var(--verde-escuro);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .panel-title svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--verde-escuro);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--cinza-chumbo);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--marrom-taupe);
+            background-color: var(--branco);
+            color: var(--cinza-chumbo);
+            font-size: 14px;
+        }
+        
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--verde-oliva);
+            box-shadow: 0 0 0 2px rgba(112, 130, 56, 0.2);
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--verde-escuro);
+            color: var(--branco);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        button:hover {
+            background-color: var(--verde-oliva);
+            transform: translateY(-1px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        button svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+        
+        .secondary-button {
+            background-color: var(--marrom-taupe);
+        }
+        
+        .secondary-button:hover {
+            background-color: #9c8f77;
+        }
+        
+        .export-button {
+            background-color: #2F4F4F;
+        }
+        
+        .export-button:hover {
+            background-color: #3a5f5f;
+        }
+        
+        .data-section {
+            margin-top: 30px;
+        }
+        
+        .table-container {
+            border: 1px solid var(--marrom-taupe);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: var(--verde-escuro);
+            color: var(--branco);
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+        }
+        
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--marrom-taupe);
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(245, 245, 220, 0.5);
+        }
+        
+        tr.selected {
+            background-color: rgba(112, 130, 56, 0.1);
+        }
+        
+        .totals-section {
+            margin-top: 25px;
+            background-color: var(--verde-escuro);
+            color: var(--branco);
+            border-radius: 6px;
+            padding: 20px;
+        }
+        
+        .totals-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .totals-title {
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .totals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        
+        .total-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .total-card-title {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .total-card-value {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .grand-total {
+            grid-column: 1 / -1;
+            background-color: var(--verde-oliva);
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 15px;
+            }
+            
+            .control-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Calendário Motivacional</h1>
-
-    <button class="theme-toggle-btn" onclick="toggleTheme()">Mudar Tema</button>
-
-    <div class="calendar">
-        <div class="day-header">Dom</div>
-        <div class="day-header">Seg</div>
-        <div class="day-header">Ter</div>
-        <div class="day-header">Qua</div>
-        <div class="day-header">Qui</div>
-        <div class="day-header">Sex</div>
-        <div class="day-header">Sáb</div>
-
-        <div class="day" data-message="Cada passo que você dá te aproxima de algo incrível. Continue caminhando.">1</div>
-        <div class="day" data-message="Seu esforço hoje é o que constrói o seu futuro. Não desista.">2</div>
-        <div class="day" data-message="Não importa o quão devagar você vá, o importante é não parar.">3</div>
-        <div class="day" data-message="Você tem mais força do que imagina. Acredite no seu potencial.">4</div>
-        <div class="day" data-message="Os desafios de hoje são as vitórias de amanhã. Continue em frente.">5</div>
-        <div class="day" data-message="Cada dia é uma nova oportunidade para ser melhor do que ontem.">6</div>
-        <div class="day" data-message="Seu sonho vale cada esforço. Persista, você está no caminho certo.">7</div>
-        <div class="day" data-message="A jornada pode ser longa, mas a recompensa será grandiosa.">8</div>
-        <div class="day" data-message="Acredite em si mesmo e tudo se tornará possível.">9</div>
-        <div class="day" data-message="Você é capaz de superar qualquer obstáculo. Mantenha o foco.">10</div>
-        <div class="day" data-message="O futuro pertence a quem trabalha por ele hoje.">11</div>
-        <div class="day" data-message="Cada conquista começa com a decisão de tentar.">12</div>
-        <div class="day" data-message="Grandes coisas estão à sua espera. Dê o seu melhor.">13</div>
-        <div class="day" data-message="Seu potencial é ilimitado. Acredite nisso e vá em frente.">14</div>
-        <div class="day" data-message="Nenhum sonho é grande demais quando se tem determinação.">15</div>
-        <div class="day" data-message="Você está fazendo um ótimo trabalho. Continue firme!">16</div>
-        <div class="day" data-message="Você é capaz de mais do que imagina. Confie em si mesmo.">17</div>
-        <div class="day" data-message="Cada desafio enfrentado é uma lição aprendida. Você está crescendo.">18</div>
-        <div class="day" data-message="Seu esforço será recompensado. Tenha paciência e persistência.">19</div>
-        <div class="day" data-message="Acredite que você pode, e você estará no meio do caminho.">20</div>
-        <div class="day" data-message="Você está mais perto do sucesso do que imagina. Continue avançando.">21</div>
-        <div class="day" data-message="O impossível é apenas algo que ninguém tentou ainda. Tente.">22</div>
-        <div class="day" data-message="Você tem a capacidade de transformar seus sonhos em realidade.">23</div>
-        <div class="day" data-message="Seus esforços de hoje definirão as conquistas de amanhã.">24</div>
-        <div class="day" data-message="Sua jornada é única, e você está exatamente onde precisa estar.">25</div>
-        <div class="day" data-message="Nunca subestime o poder de acreditar em si mesmo.">26</div>
-        <div class="day" data-message="Você está construindo algo incrível. Continue.">27</div>
-        <div class="day" data-message="Sua persistência é o que define seu sucesso.">28</div>
-        <div class="day" data-message="Você tem o que é preciso para alcançar seus sonhos. Acredite.">29</div>
-        <div class="day" data-message="Cada dia é uma nova chance de alcançar seus objetivos.">30</div>
+    <div class="container">
+        <header>
+            <h1>Calculadora Agrícola</h1>
+            <p class="subtitle">Sistema de gestão de produção (Litros)</p>
+        </header>
+        
+        <div class="control-panel">
+            <div class="panel-section">
+                <div class="panel-title">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M7,7H9V9H7V7M7,11H9V13H7V11M7,15H9V17H7V15M17,17H11V15H17V17M17,13H11V11H17V13M17,9H11V7H17V9Z"/>
+                    </svg>
+                    Controle Mensal
+                </div>
+                
+                <div class="form-group">
+                    <label for="month">Período</label>
+                    <select id="month">
+                        <!-- Opções serão preenchidas via JavaScript -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="value-input" id="column-label">Litros - Coluna 1</label>
+                    <input type="text" id="value-input" placeholder="0,00">
+                </div>
+                
+                <div class="button-group">
+                    <button id="add-button">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                        </svg>
+                        Adicionar
+                    </button>
+                    <button id="next-button" disabled>
+                        <svg viewBox="0 0 24 24">
+                            <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/>
+                        </svg>
+                        Próxima Coluna
+                    </button>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-title">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+                    </svg>
+                    Ações
+                </div>
+                
+                <div class="button-group">
+                    <button id="finish-button" class="secondary-button">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                        </svg>
+                        Finalizar Cálculo
+                    </button>
+                    <button id="delete-button" class="secondary-button">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+                        </svg>
+                        Excluir Selecionado
+                    </button>
+                    <button id="export-button" class="export-button">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+                        </svg>
+                        Exportar Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="data-section">
+            <div class="table-container">
+                <table id="values-table">
+                    <thead>
+                        <tr>
+                            <th>Litros</th>
+                            <th>Índice</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Linhas serão adicionadas via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="totals-section">
+                <div class="totals-header">
+                    <div class="totals-title">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M4,6V18H11V6H4M20,18V6H18.5V18H20M17,17H11V15H17V17M17,13H11V11H17V13M17,9H11V7H17V9Z"/>
+                        </svg>
+                        Resumo de Produção
+                    </div>
+                </div>
+                
+                <div class="totals-grid" id="totals-display">
+                    <!-- Totais serão adicionados via JavaScript -->
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="message-card" id="messageCard">
-        <p id="messageText"></p>
-        <button class="close-btn" onclick="closeMessage()">Fechar</button>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos do DOM
+            const monthSelect = document.getElementById('month');
+            const columnLabel = document.getElementById('column-label');
+            const valueInput = document.getElementById('value-input');
+            const addButton = document.getElementById('add-button');
+            const nextButton = document.getElementById('next-button');
+            const finishButton = document.getElementById('finish-button');
+            const deleteButton = document.getElementById('delete-button');
+            const exportButton = document.getElementById('export-button');
+            const tableBody = document.querySelector('#values-table tbody');
+            const totalsDisplay = document.getElementById('totals-display');
+            
+            // Estado da aplicação
+            let currentColumn = 1;
+            let columnsData = {};
+            let timeoutId = null;
+            const dataKey = 'agriculturalDataLitros';
+            const AUTO_ADD_DELAY = 500; // 0.5 segundos
+            const currentYear = new Date().getFullYear();
+            
+            // Inicialização
+            init();
+            
+            function init() {
+                loadData();
+                setupMonthSelector();
+                setupEventListeners();
+                updateUI();
+            }
+            
+            function setupMonthSelector() {
+                const months = generateMonthsList();
+                monthSelect.innerHTML = months.map(month => 
+                    `<option value="${month.value}">${month.label}</option>`
+                ).join('');
+                
+                const currentMonth = getCurrentMonth();
+                monthSelect.value = currentMonth;
+            }
+            
+            function generateMonthsList() {
+                // Gera meses dos últimos 12 meses e próximos 12 meses
+                const months = [];
+                const currentDate = new Date(currentYear, new Date().getMonth(), 1);
+                
+                // Adiciona meses passados
+                for (let i = 12; i > 0; i--) {
+                    const date = new Date(currentDate);
+                    date.setMonth(date.getMonth() - i);
+                    months.push({
+                        value: date.toISOString().slice(0, 7),
+                        label: formatMonth(date.toISOString().slice(0, 7))
+                    });
+                }
+                
+                // Adiciona meses futuros (incluindo o atual)
+                for (let i = 0; i < 12; i++) {
+                    const date = new Date(currentDate);
+                    date.setMonth(date.getMonth() + i);
+                    months.push({
+                        value: date.toISOString().slice(0, 7),
+                        label: formatMonth(date.toISOString().slice(0, 7))
+                    });
+                }
+                
+                return months;
+            }
+            
+            function getCurrentMonth() {
+                return new Date().toISOString().slice(0, 7);
+            }
+            
+            function formatMonth(monthString) {
+                const [year, month] = monthString.split('-');
+                const monthNames = [
+                    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+                ];
+                return `${monthNames[parseInt(month) - 1]} ${year}`;
+            }
+            
+            function setupEventListeners() {
+                valueInput.addEventListener('input', function() {
+                    if (timeoutId) clearTimeout(timeoutId);
+                    timeoutId = setTimeout(addValue, AUTO_ADD_DELAY);
+                });
+                
+                addButton.addEventListener('click', addValue);
+                nextButton.addEventListener('click', nextColumn);
+                finishButton.addEventListener('click', finishCalculation);
+                deleteButton.addEventListener('click', deleteSelected);
+                exportButton.addEventListener('click', exportToExcel);
+                
+                monthSelect.addEventListener('change', function() {
+                    loadData();
+                    updateUI();
+                });
+                
+                valueInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        addValue();
+                    }
+                });
+            }
+            
+            function addValue() {
+                const valueStr = valueInput.value.trim().replace(',', '.');
+                if (!valueStr) return;
+                
+                try {
+                    const value = parseFloat(valueStr);
+                    if (isNaN(value) || value <= 0) {
+                        throw new Error("Valor inválido");
+                    }
+                    
+                    if (!columnsData[currentColumn]) {
+                        columnsData[currentColumn] = [];
+                    }
+                    
+                    columnsData[currentColumn].push(value);
+                    saveData();
+                    updateUI();
+                    valueInput.value = '';
+                    valueInput.focus();
+                } catch (error) {
+                    alert("Por favor, insira um valor numérico válido e positivo");
+                    valueInput.value = '';
+                    valueInput.focus();
+                }
+            }
+            
+            function nextColumn() {
+                currentColumn++;
+                updateUI();
+            }
+            
+            function deleteSelected() {
+                const selectedRow = tableBody.querySelector('tr.selected');
+                if (!selectedRow) {
+                    alert("Nenhum item selecionado para excluir");
+                    return;
+                }
+                
+                const index = parseInt(selectedRow.cells[1].textContent) - 1;
+                if (columnsData[currentColumn] && columnsData[currentColumn][index] !== undefined) {
+                    columnsData[currentColumn].splice(index, 1);
+                    saveData();
+                    updateUI();
+                }
+            }
+            
+            function finishCalculation() {
+                if (Object.keys(columnsData).length === 0) {
+                    alert("Nenhum dado foi inserido");
+                    return;
+                }
+                
+                saveData();
+                
+                if (confirm("Deseja calcular o total geral de todas as colunas?")) {
+                    const grandTotal = Object.values(columnsData).reduce((total, values) => {
+                        return total + values.reduce((sum, value) => sum + value, 0);
+                    }, 0);
+                    
+                    alert(`TOTAL GERAL: ${grandTotal.toFixed(2).replace('.', ',')} litros`);
+     
