@@ -297,8 +297,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>Calculadora Agrícola</h1>
-            <p class="subtitle">Sistema de gestão de produção (Litros)</p>
+            <h1>Calculadora Agrícola Profissional</h1>
+            <p class="subtitle">Sistema de gestão leite</p>
         </header>
         
         <div class="control-panel">
@@ -318,7 +318,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="value-input" id="column-label">Litros - Coluna 1</label>
+                    <label for="value-input" id="column-label">Valor da Coluna 1</label>
                     <input type="text" id="value-input" placeholder="0,00">
                 </div>
                 
@@ -374,7 +374,7 @@
                 <table id="values-table">
                     <thead>
                         <tr>
-                            <th>Litros</th>
+                            <th>Valores</th>
                             <th>Índice</th>
                         </tr>
                     </thead>
@@ -390,7 +390,7 @@
                         <svg viewBox="0 0 24 24">
                             <path d="M4,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M4,6V18H11V6H4M20,18V6H18.5V18H20M17,17H11V15H17V17M17,13H11V11H17V13M17,9H11V7H17V9Z"/>
                         </svg>
-                        Resumo de Produção
+                        Resumo Financeiro
                     </div>
                 </div>
                 
@@ -419,9 +419,9 @@
             let currentColumn = 1;
             let columnsData = {};
             let timeoutId = null;
-            const dataKey = 'agriculturalDataLitros';
+            const dataKey = 'agriculturalDataPro';
             const AUTO_ADD_DELAY = 500; // 0.5 segundos
-            const currentYear = new Date().getFullYear();
+            const currentYear = 2025; // Ano atual definido como 2025
             
             // Inicialização
             init();
@@ -472,7 +472,7 @@
             }
             
             function getCurrentMonth() {
-                return new Date().toISOString().slice(0, 7);
+                return new Date(currentYear, new Date().getMonth(), 1).toISOString().slice(0, 7);
             }
             
             function formatMonth(monthString) {
@@ -567,5 +567,4 @@
                         return total + values.reduce((sum, value) => sum + value, 0);
                     }, 0);
                     
-                    alert(`TOTAL GERAL: ${grandTotal.toFixed(2).replace('.', ',')} litros`);
-     
+                  
